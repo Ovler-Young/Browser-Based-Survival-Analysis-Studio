@@ -41,12 +41,13 @@ To deploy the hosted Shiny app manually:
 ```r
 install.packages("rsconnect")
 Sys.setenv(
-  SHINYAPPS_NAME = "<account-name>",
   SHINYAPPS_TOKEN = "<token>",
   SHINYAPPS_SECRET = "<secret>"
 )
 source("scripts/deploy_shinyapps.R")
 ```
+
+If the token can access more than one `shinyapps.io` account, also set `SHINYAPPS_NAME` to the target account slug.
 
 ## PDF Report Rendering
 
@@ -69,11 +70,14 @@ In the repository settings, set **Pages** to use **GitHub Actions** as the sourc
 
 To enable the `shinyapps.io` deployment job, add these repository secrets:
 
-- `SHINYAPPS_NAME`
 - `SHINYAPPS_TOKEN`
 - `SHINYAPPS_SECRET`
 
-The `shinyapps.io` job is skipped automatically until those secrets are present.
+Optional:
+
+- `SHINYAPPS_NAME`
+
+The `shinyapps.io` job is skipped automatically until the token and secret are present. Set `SHINYAPPS_NAME` as well if the token can access multiple accounts.
 
 ## Example Datasets
 

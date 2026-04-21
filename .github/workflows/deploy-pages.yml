@@ -95,11 +95,11 @@ jobs:
       - name: Check shinyapps.io configuration
         id: shinyapps_config
         run: |
-          if [ -n "$SHINYAPPS_NAME" ] && [ -n "$SHINYAPPS_TOKEN" ] && [ -n "$SHINYAPPS_SECRET" ]; then
+          if [ -n "$SHINYAPPS_TOKEN" ] && [ -n "$SHINYAPPS_SECRET" ]; then
             echo "configured=true" >> "$GITHUB_OUTPUT"
           else
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "shinyapps.io secrets are not configured; skipping deploy."
+            echo "shinyapps.io token/secret are not configured; skipping deploy."
           fi
 
       - name: Check out repository
