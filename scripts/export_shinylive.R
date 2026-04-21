@@ -37,6 +37,7 @@ shinylive::export(
   appdir = ".",
   destdir = site_dir,
   quiet = FALSE,
+  wasm_packages = FALSE,
   package_cache = TRUE
 )
 
