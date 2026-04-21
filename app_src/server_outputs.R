@@ -225,12 +225,25 @@ output$cox_results_table <- renderDT({
   )
 })
 
+forest_plot_height_px <- function(result, min_height = 560) {
+  coefficient_rows <- if (isTRUE(result$ok)) nrow(result$coefficient_table) else 0
+  max(min_height, 220 + (coefficient_rows * 72))
+}
+
+output$forest_plot_ui <- renderUI({
+  plotOutput("forest_plot", height = sprintf("%spx", forest_plot_height_px(cox_result())))
+})
+
 output$forest_plot <- renderPlot({
   result <- cox_result()
   validate(need(result$ok, result$error))
   validate(need(!is.null(result$forest_plot), "Forest plot is unavailable for the current model."))
   print(result$forest_plot)
-}, res = 96)
+},
+height = function() {
+  forest_plot_height_px(cox_result())
+},
+res = 96)
 
 output$ph_table <- renderDT({
   result <- cox_result()
@@ -326,7 +339,12 @@ output$download_forest_plot <- downloadHandler(
     result <- cox_result()
     validate(need(result$ok, result$error))
     validate(need(!is.null(result$forest_plot), "Forest plot unavailable."))
-    png(file, width = 1800, height = 1200, res = 180)
+    png(
+      file,
+      width = 1800,
+      height = ceiling(forest_plot_height_px(result, min_height = 640) * (180 / 96)),
+      res = 180
+    )
     print(result$forest_plot)
     grDevices::dev.off()
   }

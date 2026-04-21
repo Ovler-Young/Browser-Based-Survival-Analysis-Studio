@@ -155,7 +155,7 @@ ui <- page_sidebar(
         card(
           full_screen = TRUE,
           card_header("Hazard ratio forest plot"),
-          plotOutput("forest_plot", height = "560px")
+          uiOutput("forest_plot_ui")
         ),
         col_widths = c(5, 7)
       ),
@@ -290,8 +290,16 @@ ui <- page_sidebar(
       background: rgba(179,67,54,0.12);
       border-color: rgba(179,67,54,0.28);
     }
-    .card-body,
+    .bslib-card {
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
+    .bslib-card .card-body,
     .accordion-body {
+      flex: 0 0 auto;
+      height: auto !important;
+      max-height: none !important;
       overflow: visible !important;
     }
     .shiny-datatable {
