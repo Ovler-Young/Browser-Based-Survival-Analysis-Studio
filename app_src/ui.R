@@ -97,18 +97,74 @@ ui <- page_sidebar(
     id = "main_tabs",
     nav_panel(
       "Overview",
+      card(
+        full_screen = FALSE,
+        fill = FALSE,
+        card_header("How to use this website"),
+        div(
+          class = "guide-card",
+          div(
+            class = "guide-grid",
+            div(
+              class = "guide-section",
+              h5("Use the app"),
+              tags$ol(
+                tags$li("Wait 10-20 seconds on the first visit while webR packages download."),
+                tags$li("Start with the default survival::lung example to review a complete worked analysis immediately."),
+                tags$li("Move through the Overview, Kaplan-Meier, Cox Model, and Diagnostics tabs."),
+                tags$li("To test your own data, switch Data source to Upload file and map the required columns from the sidebar."),
+                tags$li("Use the download buttons to inspect the filtered data, plots, workbook, and reproducible files.")
+              )
+            ),
+            div(
+              class = "guide-section",
+              h5("Highlights"),
+              tags$ul(
+                tags$li("Browser-based Shinylive deployment for easy grading without a local R setup."),
+                tags$li("Preloaded example dataset so the main outputs appear immediately."),
+                tags$li("Clear separation of validation, Kaplan-Meier analysis, Cox modeling, and diagnostics."),
+                tags$li("Direct downloads for reproducible outputs.")
+              )
+            ),
+            div(
+              class = "guide-section",
+              h5("Additional functions"),
+              tags$ul(
+                tags$li("Built-in example datasets: lung, veteran, and ovarian."),
+                tags$li("Risk table, median survival summary, and log-rank testing."),
+                tags$li("Multivariable Cox model controls including reference levels, strata terms, and ties handling."),
+                tags$li("PH diagnostics with cox.zph() results and Schoenfeld residual plots."),
+                tags$li("Downloadable data, plots, workbook, script, and report files."),
+                tags$li(
+                  "Source code: ",
+                  tags$a(
+                    href = "https://github.com/Ovler-Young/Browser-Based-Survival-Analysis-Studio",
+                    target = "_blank",
+                    rel = "noopener noreferrer",
+                    "GitHub repository"
+                  )
+                )
+              )
+            )
+          )
+        )
+      ),
       layout_columns(
         card(
           full_screen = FALSE,
+          fill = FALSE,
           card_header("Analysis snapshot"),
           uiOutput("snapshot_cards")
         ),
         card(
           full_screen = FALSE,
+          fill = FALSE,
           card_header("Current configuration"),
           uiOutput("configuration_summary")
         ),
-        col_widths = c(7, 5)
+        col_widths = c(7, 5),
+        fill = FALSE,
+        fillable = FALSE
       ),
       card(
         full_screen = TRUE,
@@ -135,21 +191,27 @@ ui <- page_sidebar(
           uiOutput("stratified_km_status"),
           plotOutput("stratified_km_plot", height = "720px")
         ),
-        col_widths = c(6, 6)
+        col_widths = c(6, 6),
+        fill = FALSE,
+        fillable = FALSE
       ),
       layout_columns(
         card(
           full_screen = FALSE,
+          fill = FALSE,
           card_header("Median survival summary"),
           DTOutput("median_survival_table")
         ),
         card(
           full_screen = FALSE,
+          fill = FALSE,
           card_header("Log-rank test"),
           uiOutput("logrank_status"),
           DTOutput("logrank_table")
         ),
-        col_widths = c(7, 5)
+        col_widths = c(7, 5),
+        fill = FALSE,
+        fillable = FALSE
       )
     ),
     nav_panel(
@@ -157,29 +219,37 @@ ui <- page_sidebar(
       layout_columns(
         card(
           full_screen = FALSE,
+          fill = FALSE,
           card_header("Model fit and concordance"),
           uiOutput("cox_status"),
           DTOutput("cox_results_table")
         ),
         card(
           full_screen = TRUE,
+          fill = FALSE,
           card_header("Hazard ratio forest plot"),
           uiOutput("forest_plot_ui")
         ),
-        col_widths = c(5, 7)
+        col_widths = c(5, 7),
+        fill = FALSE,
+        fillable = FALSE
       ),
       layout_columns(
         card(
           full_screen = FALSE,
+          fill = FALSE,
           card_header("Proportional hazards test"),
           DTOutput("ph_table")
         ),
         card(
           full_screen = FALSE,
+          fill = FALSE,
           card_header("Events-per-variable guidance"),
           uiOutput("epv_message")
         ),
-        col_widths = c(8, 4)
+        col_widths = c(8, 4),
+        fill = FALSE,
+        fillable = FALSE
       ),
       accordion(
         accordion_panel(
@@ -193,15 +263,19 @@ ui <- page_sidebar(
       layout_columns(
         card(
           full_screen = FALSE,
+          fill = FALSE,
           card_header("Filtering summary"),
           DTOutput("filter_summary_table")
         ),
         card(
           full_screen = FALSE,
+          fill = FALSE,
           card_header("Event values and frequencies"),
           DTOutput("event_frequency_table")
         ),
-        col_widths = c(6, 6)
+        col_widths = c(6, 6),
+        fill = FALSE,
+        fillable = FALSE
       ),
       card(
         full_screen = TRUE,
@@ -256,6 +330,36 @@ ui <- page_sidebar(
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 0.9rem;
+    }
+    .guide-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,250,242,0.84));
+      border: 1px solid rgba(30,95,116,0.14);
+      border-radius: 1rem;
+      padding: 1rem 1.05rem;
+      margin-bottom: 0.4rem;
+    }
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .guide-section {
+      background: rgba(255,255,255,0.72);
+      border-radius: 0.95rem;
+      padding: 0.95rem 1rem;
+      border: 1px solid rgba(30,95,116,0.1);
+    }
+    .guide-section h5 {
+      margin-bottom: 0.7rem;
+      letter-spacing: -0.02em;
+    }
+    .guide-section ol,
+    .guide-section ul {
+      margin-bottom: 0;
+      padding-left: 1.2rem;
+    }
+    .guide-section li + li {
+      margin-top: 0.45rem;
     }
     .metric-card {
       background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.76));
@@ -312,16 +416,8 @@ ui <- page_sidebar(
       background: rgba(179,67,54,0.12);
       border-color: rgba(179,67,54,0.28);
     }
-    .bslib-card {
-      height: auto !important;
-      max-height: none !important;
-      overflow: visible !important;
-    }
-    .bslib-card .card-body,
+    .card-body,
     .accordion-body {
-      flex: 0 0 auto;
-      height: auto !important;
-      max-height: none !important;
       overflow: visible !important;
     }
     .shiny-datatable {
