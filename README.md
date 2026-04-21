@@ -48,8 +48,9 @@ This repository includes `.github/workflows/deploy-pages.yml`, which:
 
 1. installs the app dependencies,
 2. exports the app with `shinylive::export()`,
-3. uploads the generated `site/` folder as a GitHub Pages artifact,
-4. deploys it with `actions/deploy-pages`.
+3. publishes the generated `site/` folder to the `gh-pages` branch,
+4. uploads the same `site/` folder as a GitHub Pages artifact,
+5. deploys it with `actions/deploy-pages`.
 
 In the repository settings, set **Pages** to use **GitHub Actions** as the source.
 
