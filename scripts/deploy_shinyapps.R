@@ -91,5 +91,6 @@ rsconnect::deployApp(
   server = "shinyapps.io",
   recordDir = tempdir(),
   launch.browser = FALSE,
-  logLevel = "verbose"
+  # Work around rsconnect 1.8.0 crashing in verbose mode with the httr2 backend.
+  logLevel = "normal"
 )
