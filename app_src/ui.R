@@ -5,6 +5,15 @@ ui <- page_sidebar(
     p(
       class = "lead-text",
       "Kaplan-Meier curves, log-rank tests, and Cox models in a guided workflow that runs in GitHub Pages directly in your browser."
+    ),
+    div(
+      class = "app-meta-links",
+      tags$a(
+        href = "https://github.com/Ovler-Young/Browser-Based-Survival-Analysis-Studio",
+        target = "_blank",
+        rel = "noopener noreferrer",
+        "View source on GitHub"
+      )
     )
   ),
   theme = bs_theme(
@@ -219,6 +228,19 @@ ui <- page_sidebar(
       margin-bottom: 0;
       max-width: 58rem;
       color: #44525a;
+    }
+    .app-meta-links {
+      margin-top: 0.5rem;
+    }
+    .app-meta-links a {
+      color: #1e5f74;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .app-meta-links a:hover,
+    .app-meta-links a:focus {
+      color: #174b5b;
+      text-decoration: underline;
     }
     .sidebar-note {
       border-left: 4px solid #1e5f74;
