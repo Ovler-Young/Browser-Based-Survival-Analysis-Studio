@@ -416,10 +416,6 @@ ui <- page_sidebar(
       background: rgba(179,67,54,0.12);
       border-color: rgba(179,67,54,0.28);
     }
-    .card-body,
-    .accordion-body {
-      overflow: visible !important;
-    }
     .shiny-datatable {
       overflow-x: auto;
     }
