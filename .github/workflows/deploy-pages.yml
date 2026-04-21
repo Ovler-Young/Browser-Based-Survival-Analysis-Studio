@@ -92,6 +92,10 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:
+      # fs 2.0.0+ prefers a system libuv on Linux, but shinyapps.io's build
+      # image currently lacks that dependency for this package path. Pinning
+      # this deploy job to a pre-2.0.0 RSPM snapshot keeps fs on 1.6.x.
+      RSPM: https://packagemanager.posit.co/cran/__linux__/jammy/2026-03-21
       SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME }}
       SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
       SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
