@@ -41,4 +41,13 @@ shinylive::export(
   package_cache = TRUE
 )
 
+writeLines(
+  c(
+    "# Redirect legacy shinylive preview paths back to the exported single-app root.",
+    "/app_* / 302"
+  ),
+  con = file.path(site_dir, "_redirects"),
+  useBytes = TRUE
+)
+
 message(sprintf("Shinylive export complete: %s", site_dir))

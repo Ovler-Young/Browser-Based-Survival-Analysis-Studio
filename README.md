@@ -35,6 +35,7 @@ source("scripts/export_shinylive.R")
 ```
 
 This creates a `site/` directory containing the GitHub Pages-ready static build.
+The exported site is a single-app build served from the site root, and the build also includes a Cloudflare Pages `_redirects` rule that sends legacy `/app_*` preview paths back to `/`.
 
 To deploy the hosted Shiny app manually:
 
