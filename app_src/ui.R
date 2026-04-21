@@ -4,7 +4,7 @@ ui <- page_sidebar(
     h2("Survival Analysis Studio"),
     p(
       class = "lead-text",
-      "Kaplan-Meier curves, log-rank tests, and Cox models in a guided Shiny workflow that can run in GitHub Pages or a hosted Shiny deployment."
+      "Kaplan-Meier curves, log-rank tests, and Cox models in a guided workflow that runs in GitHub Pages directly in your browser."
     )
   ),
   theme = bs_theme(
@@ -23,7 +23,7 @@ ui <- page_sidebar(
     div(
       class = "sidebar-note",
       strong("Deployment note."),
-      " This app is published as both a browser-based Shinylive build and a hosted Shiny app, so startup time and file handling can vary by deployment target."
+      " This app is published as a browser-based Shinylive build, so analysis runs on your own machine rather than on a hosted Shiny server."
     ),
     div(
       class = "sidebar-note warm",
