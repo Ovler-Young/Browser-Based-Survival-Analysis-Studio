@@ -14,7 +14,7 @@ The app opens with a complete worked example based on `survival::lung`, so revie
 - Hazard-ratio forest plot via `survminer::ggforest()`.
 - PH diagnostics from `cox.zph()`, including p-value table and Schoenfeld residual plot grid.
 - Missing-data summary, event-value frequency table, and `time <= 0` filtering diagnostics.
-- Downloadable filtered data, Excel workbook, plot images, and a reproducible `.R` script with provenance comments.
+- Downloadable filtered data, Excel workbook, plot images, a reproducible `.R` script, and a Quarto `.qmd` report prepared for Typst PDF rendering.
 
 ## First Load
 

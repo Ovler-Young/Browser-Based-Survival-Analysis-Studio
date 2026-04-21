@@ -309,3 +309,12 @@ output$download_repro_script <- downloadHandler(
     writeLines(build_repro_script(), con = file, useBytes = TRUE)
   }
 )
+
+output$download_repro_report <- downloadHandler(
+  filename = function() {
+    sprintf("reproducible_report_%s.qmd", format(Sys.Date(), "%Y%m%d"))
+  },
+  content = function(file) {
+    writeLines(build_repro_qmd(), con = file, useBytes = TRUE)
+  }
+)
