@@ -1,0 +1,6 @@
+site/
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+Rplots.pdf
