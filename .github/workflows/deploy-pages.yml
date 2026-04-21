@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  deployments: write
   pages: write
   id-token: write
 
@@ -137,3 +138,70 @@ jobs:
       - name: Deploy to shinyapps.io
         if: steps.shinyapps_config.outputs.configured == 'true'
         run: Rscript scripts/deploy_shinyapps.R
+
+  deploy_cloudflare_pages:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_PAGES_PROJECT_NAME: bdsfinal
+
+    steps:
+      - name: Check Cloudflare Pages configuration
+        id: cloudflare_pages_config
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Cloudflare Pages token/account ID are not configured; skipping deploy."
+          fi
+
+      - name: Check out repository
+        if: steps.cloudflare_pages_config.outputs.configured == 'true'
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        if: steps.cloudflare_pages_config.outputs.configured == 'true'
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+
+      - name: Install R dependencies
+        if: steps.cloudflare_pages_config.outputs.configured == 'true'
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::shiny
+            any::shinylive
+            any::bslib
+            any::shinybusy
+            any::DT
+            any::survival
+            any::survminer
+            any::ggplot2
+            any::ggplotify
+            any::patchwork
+            any::dplyr
+            any::readr
+            any::readxl
+            any::writexl
+            any::glue
+
+      - name: Export Shinylive site
+        if: steps.cloudflare_pages_config.outputs.configured == 'true'
+        run: Rscript scripts/export_shinylive.R
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.cloudflare_pages_config.outputs.configured == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy site --project-name=${{ env.CLOUDFLARE_PAGES_PROJECT_NAME }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
