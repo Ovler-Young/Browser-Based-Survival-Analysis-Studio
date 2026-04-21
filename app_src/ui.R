@@ -14,9 +14,9 @@ ui <- page_sidebar(
     primary = "#1e5f74",
     secondary = "#d8b26e",
     success = "#3b7a57",
-    base_font = font_google("Public Sans"),
-    heading_font = font_google("Space Grotesk"),
-    code_font = font_google("JetBrains Mono")
+    base_font = font_collection("system-ui", "Segoe UI", "Helvetica Neue", "Arial", "sans-serif"),
+    heading_font = font_collection("Avenir Next", "Segoe UI", "Helvetica Neue", "Arial", "sans-serif"),
+    code_font = font_collection("ui-monospace", "SFMono-Regular", "SF Mono", "Consolas", "Liberation Mono", "Menlo", "monospace")
   ),
   sidebar = sidebar(
     width = 390,
@@ -251,7 +251,7 @@ ui <- page_sidebar(
     }
     .metric-value {
       font-size: 1.8rem;
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Avenir Next', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
       line-height: 1.1;
     }
     .metric-sub {
