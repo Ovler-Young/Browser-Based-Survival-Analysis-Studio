@@ -82,20 +82,39 @@ jobs:
         uses: actions/deploy-pages@v4
 
   deploy_shinyapps:
-    if: github.ref == 'refs/heads/main' && secrets.SHINYAPPS_NAME != '' && secrets.SHINYAPPS_TOKEN != '' && secrets.SHINYAPPS_SECRET != ''
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    env:
+      SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME }}
+      SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
+      SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
+      SHINYAPPS_APP_NAME: bdsfinal
+      SHINYAPPS_APP_TITLE: Survival Analysis Studio
 
     steps:
+      - name: Check shinyapps.io configuration
+        id: shinyapps_config
+        run: |
+          if [ -n "$SHINYAPPS_NAME" ] && [ -n "$SHINYAPPS_TOKEN" ] && [ -n "$SHINYAPPS_SECRET" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "shinyapps.io secrets are not configured; skipping deploy."
+          fi
+
       - name: Check out repository
+        if: steps.shinyapps_config.outputs.configured == 'true'
         uses: actions/checkout@v4
 
       - name: Set up R
+        if: steps.shinyapps_config.outputs.configured == 'true'
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: release
           use-public-rspm: true
 
       - name: Install R dependencies
+        if: steps.shinyapps_config.outputs.configured == 'true'
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
@@ -116,10 +135,5 @@ jobs:
             any::glue
 
       - name: Deploy to shinyapps.io
-        env:
-          SHINYAPPS_NAME: ${{ secrets.SHINYAPPS_NAME }}
-          SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
-          SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-          SHINYAPPS_APP_NAME: bdsfinal
-          SHINYAPPS_APP_TITLE: Survival Analysis Studio
+        if: steps.shinyapps_config.outputs.configured == 'true'
         run: Rscript scripts/deploy_shinyapps.R
