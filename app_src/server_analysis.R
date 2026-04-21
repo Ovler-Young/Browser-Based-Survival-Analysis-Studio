@@ -804,3 +804,40 @@ build_repro_qmd <- reactive({
 
   paste(qmd_lines, collapse = "\n")
 })
+
+build_repro_qmd_for_render <- function(render_data_path = NULL) {
+  dataset <- current_dataset()
+  qmd_text <- build_repro_qmd()
+
+  if (identical(dataset$source_type, "upload_csv")) {
+    if (is.null(render_data_path) || !nzchar(render_data_path)) {
+      stop("A local CSV data path is required to render the uploaded dataset to PDF.")
+    }
+
+    return(
+      sub(
+        "data_path <- 'path/to/your_data.csv'",
+        sprintf("data_path <- %s", deparse(render_data_path)),
+        qmd_text,
+        fixed = TRUE
+      )
+    )
+  }
+
+  if (identical(dataset$source_type, "upload_xlsx")) {
+    if (is.null(render_data_path) || !nzchar(render_data_path)) {
+      stop("A local Excel data path is required to render the uploaded dataset to PDF.")
+    }
+
+    return(
+      sub(
+        "data_path <- 'path/to/your_data.xlsx'",
+        sprintf("data_path <- %s", deparse(render_data_path)),
+        qmd_text,
+        fixed = TRUE
+      )
+    )
+  }
+
+  qmd_text
+}

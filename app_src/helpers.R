@@ -78,3 +78,23 @@ event_frequency_table <- function(x) {
   ) |>
     dplyr::mutate(proportion_label = format_pct(proportion))
 }
+
+find_quarto_binary <- function() {
+  candidates <- c(
+    unname(Sys.which("quarto")),
+    Sys.getenv("RSTUDIO_QUARTO", unset = ""),
+    Sys.getenv("QUARTO_BIN_PATH", unset = "")
+  )
+  candidates <- unique(candidates[nzchar(candidates)])
+  existing <- candidates[file.exists(candidates)]
+
+  if (length(existing) == 0) {
+    ""
+  } else {
+    normalizePath(existing[[1]], winslash = "/", mustWork = TRUE)
+  }
+}
+
+quarto_typst_available <- function() {
+  nzchar(find_quarto_binary())
+}

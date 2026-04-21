@@ -1,3 +1,34 @@
+pdf_download_available <- reactive({
+  quarto_typst_available()
+})
+
+output$download_repro_pdf_ui <- renderUI({
+  if (!pdf_download_available()) {
+    return(NULL)
+  }
+
+  downloadButton("download_repro_pdf", "Rendered report (.pdf)", class = "btn-outline-primary w-100")
+})
+
+output$download_repro_pdf_note <- renderUI({
+  if (pdf_download_available()) {
+    return(NULL)
+  }
+
+  div(
+    class = "status-block warn mt-3",
+    strong("PDF rendering unavailable here."),
+    p(
+      "Typst PDF generation requires a local Shiny session with Quarto installed and available on the system path.",
+      class = "mb-1"
+    ),
+    p(
+      "The GitHub Pages shinylive build can still download the portable `.qmd` report source, but it cannot run Quarto inside the browser.",
+      class = "mb-0"
+    )
+  )
+})
+
 output$snapshot_cards <- renderUI({
   base <- analysis_base()
   result <- cox_result()
@@ -316,5 +347,78 @@ output$download_repro_report <- downloadHandler(
   },
   content = function(file) {
     writeLines(build_repro_qmd(), con = file, useBytes = TRUE)
+  }
+)
+
+output$download_repro_pdf <- downloadHandler(
+  filename = function() {
+    sprintf("reproducible_report_%s.pdf", format(Sys.Date(), "%Y%m%d"))
+  },
+  content = function(file) {
+    validate(
+      need(
+        pdf_download_available(),
+        "PDF rendering requires a local Quarto installation. Download the .qmd report if you are using the shinylive browser build."
+      )
+    )
+
+    quarto_bin <- find_quarto_binary()
+    validate(need(nzchar(quarto_bin), "Could not find the Quarto executable on this machine."))
+
+    render_dir <- tempfile("quarto-render-")
+    dir.create(render_dir, recursive = TRUE, showWarnings = FALSE)
+    on.exit(unlink(render_dir, recursive = TRUE, force = TRUE), add = TRUE)
+
+    dataset <- current_dataset()
+    render_data_path <- NULL
+
+    if (identical(dataset$source_type, "upload_csv")) {
+      render_data_path <- "uploaded_data.csv"
+      ok <- file.copy(input$data_file$datapath, file.path(render_dir, render_data_path), overwrite = TRUE)
+      validate(need(ok, "Failed to stage the uploaded CSV file for PDF rendering."))
+    } else if (identical(dataset$source_type, "upload_xlsx")) {
+      render_data_path <- "uploaded_data.xlsx"
+      ok <- file.copy(input$data_file$datapath, file.path(render_dir, render_data_path), overwrite = TRUE)
+      validate(need(ok, "Failed to stage the uploaded Excel file for PDF rendering."))
+    }
+
+    qmd_path <- file.path(render_dir, "reproducible_report.qmd")
+    pdf_path <- file.path(render_dir, "reproducible_report.pdf")
+
+    writeLines(
+      build_repro_qmd_for_render(render_data_path = render_data_path),
+      con = qmd_path,
+      useBytes = TRUE
+    )
+
+    old_wd <- getwd()
+    on.exit(setwd(old_wd), add = TRUE)
+    setwd(render_dir)
+
+    render_log <- system2(
+      quarto_bin,
+      args = c("render", basename(qmd_path), "--to", "typst", "--output", basename(pdf_path)),
+      stdout = TRUE,
+      stderr = TRUE,
+      env = c(sprintf("QUARTO_R=%s", normalizePath(R.home("bin"), winslash = "/", mustWork = TRUE)))
+    )
+
+    render_status <- attr(render_log, "status")
+    if (!is.null(render_status) && render_status != 0) {
+      stop(
+        sprintf(
+          "Quarto Typst rendering failed%s",
+          if (length(render_log) > 0) {
+            paste0(": ", paste(render_log, collapse = "\n"))
+          } else {
+            "."
+          }
+        )
+      )
+    }
+
+    validate(need(file.exists(pdf_path), "Quarto completed without creating the expected PDF file."))
+    ok <- file.copy(pdf_path, file, overwrite = TRUE)
+    validate(need(ok, "Failed to copy the rendered PDF into the download response."))
   }
 )

@@ -78,7 +78,11 @@ ui <- page_sidebar(
     downloadButton("download_repro_script", "Reproducible script (.R)", class = "btn-outline-primary w-100"),
     br(),
     br(),
-    downloadButton("download_repro_report", "Reproducible report (.qmd)", class = "btn-outline-primary w-100")
+    downloadButton("download_repro_report", "Reproducible report (.qmd)", class = "btn-outline-primary w-100"),
+    br(),
+    br(),
+    uiOutput("download_repro_pdf_ui"),
+    uiOutput("download_repro_pdf_note")
   ),
   navset_card_pill(
     id = "main_tabs",

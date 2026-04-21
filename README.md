@@ -14,7 +14,7 @@ The app opens with a complete worked example based on `survival::lung`, so revie
 - Hazard-ratio forest plot via `survminer::ggforest()`.
 - PH diagnostics from `cox.zph()`, including p-value table and Schoenfeld residual plot grid.
 - Missing-data summary, event-value frequency table, and `time <= 0` filtering diagnostics.
-- Downloadable filtered data, Excel workbook, plot images, a reproducible `.R` script, and a Quarto `.qmd` report prepared for Typst PDF rendering.
+- Downloadable filtered data, Excel workbook, plot images, a reproducible `.R` script, a Quarto `.qmd` report, and a Typst-rendered `.pdf` when the app is running locally with Quarto installed.
 
 ## First Load
 
@@ -35,6 +35,12 @@ source("scripts/export_shinylive.R")
 ```
 
 This creates a `site/` directory containing the GitHub Pages-ready static build.
+
+## PDF Report Rendering
+
+The app can render the generated `.qmd` to PDF via Quarto's `typst` format when you run the app locally with Quarto installed. This uses Typst rather than LaTeX for faster PDF generation.
+
+The exported `shinylive` site cannot render PDFs in the browser because Quarto is not available inside the static `webR` runtime. In that deployment target, users can still download the `.qmd` source report and render it locally.
 
 ## GitHub Pages Deployment
 
