@@ -1,6 +1,6 @@
-# Browser-Based Survival Analysis Studio
+# Survival Analysis Studio
 
-This project turns a Shiny survival-analysis workflow into a static `shinylive` website, which means uploaded data is processed entirely in the browser through `webR` and is not sent to a server. That privacy-first deployment model is especially useful for medical or course datasets where local-only analysis is a real advantage.
+This project packages a Shiny survival-analysis workflow for two deployment targets: a static `shinylive` site on GitHub Pages and a hosted Shiny app on `shinyapps.io`. The GitHub Pages build runs through `webR` in the browser, while the hosted deployment provides a conventional server-backed fallback when Pages is slow or returning `429` errors.
 
 The app opens with a complete worked example based on `survival::lung`, so reviewers can immediately see a Kaplan-Meier curve, a stratified Kaplan-Meier curve with risk table, a log-rank test, a multivariable Cox model, PH diagnostics, and downloadable outputs before uploading any file. Users can then switch to their own `.csv` or `.xlsx` data and remap the analysis fields from the sidebar.
 
@@ -18,7 +18,7 @@ The app opens with a complete worked example based on `survival::lung`, so revie
 
 ## First Load
 
-Because the app runs fully in the browser, the first visit may take 10-20 seconds on slower networks while `webR` and its package assets download. Later visits are usually faster thanks to browser caching.
+The GitHub Pages `shinylive` build may take 10-20 seconds on a first visit while `webR` and its package assets download. Later visits are usually faster thanks to browser caching.
 
 ## Local Development
 
@@ -36,23 +36,44 @@ source("scripts/export_shinylive.R")
 
 This creates a `site/` directory containing the GitHub Pages-ready static build.
 
+To deploy the hosted Shiny app manually:
+
+```r
+install.packages("rsconnect")
+Sys.setenv(
+  SHINYAPPS_NAME = "<account-name>",
+  SHINYAPPS_TOKEN = "<token>",
+  SHINYAPPS_SECRET = "<secret>"
+)
+source("scripts/deploy_shinyapps.R")
+```
+
 ## PDF Report Rendering
 
 The app can render the generated `.qmd` to PDF via Quarto's `typst` format when you run the app locally with Quarto installed. This uses Typst rather than LaTeX for faster PDF generation.
 
-The exported `shinylive` site cannot render PDFs in the browser because Quarto is not available inside the static `webR` runtime. In that deployment target, users can still download the `.qmd` source report and render it locally.
+The exported `shinylive` site cannot render PDFs in the browser because Quarto is not available inside the static `webR` runtime. Hosted deployments may also omit PDF rendering if Quarto is not installed on the target host. In either case, users can still download the `.qmd` source report and render it locally.
 
-## GitHub Pages Deployment
+## Deployment
 
-This repository includes `.github/workflows/deploy-pages.yml`, which:
+This repository includes [.github/workflows/deploy-pages.yml](/d:/dev/bdsfinal/.github/workflows/deploy-pages.yml:1), which:
 
 1. installs the app dependencies,
 2. exports the app with `shinylive::export()`,
 3. publishes the generated `site/` folder to the `gh-pages` branch,
 4. uploads the same `site/` folder as a GitHub Pages artifact,
-5. deploys it with `actions/deploy-pages`.
+5. deploys it with `actions/deploy-pages`,
+6. separately deploys the Shiny app to `shinyapps.io` with `rsconnect::deployApp()`.
 
 In the repository settings, set **Pages** to use **GitHub Actions** as the source.
+
+To enable the `shinyapps.io` deployment job, add these repository secrets:
+
+- `SHINYAPPS_NAME`
+- `SHINYAPPS_TOKEN`
+- `SHINYAPPS_SECRET`
+
+The `shinyapps.io` job is skipped automatically until those secrets are present.
 
 ## Example Datasets
 

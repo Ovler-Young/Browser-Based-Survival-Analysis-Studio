@@ -23,7 +23,7 @@ output$download_repro_pdf_note <- renderUI({
       class = "mb-1"
     ),
     p(
-      "The GitHub Pages shinylive build can still download the portable `.qmd` report source, but it cannot run Quarto inside the browser.",
+      "Download the portable `.qmd` source report when PDF rendering is unavailable in the current deployment target.",
       class = "mb-0"
     )
   )
@@ -376,7 +376,7 @@ output$download_repro_pdf <- downloadHandler(
     validate(
       need(
         pdf_download_available(),
-        "PDF rendering requires a local Quarto installation. Download the .qmd report if you are using the shinylive browser build."
+        "PDF rendering requires Quarto to be installed on the current host. Download the .qmd report if PDF rendering is unavailable in this deployment."
       )
     )
 

@@ -1,10 +1,10 @@
 ui <- page_sidebar(
   title = div(
     class = "app-title-wrap",
-    h2("Browser-Based Survival Analysis Studio"),
+    h2("Survival Analysis Studio"),
     p(
       class = "lead-text",
-      "Kaplan-Meier curves, log-rank tests, and Cox models that run entirely in your browser via shinylive + webR."
+      "Kaplan-Meier curves, log-rank tests, and Cox models in a guided Shiny workflow that can run in GitHub Pages or a hosted Shiny deployment."
     )
   ),
   theme = bs_theme(
@@ -22,13 +22,13 @@ ui <- page_sidebar(
     width = 390,
     div(
       class = "sidebar-note",
-      strong("Privacy first."),
-      " Uploaded data stays in the browser. No server-side processing is required."
+      strong("Deployment note."),
+      " This app is published as both a browser-based Shinylive build and a hosted Shiny app, so startup time and file handling can vary by deployment target."
     ),
     div(
       class = "sidebar-note warm",
-      strong("First load tip."),
-      " The initial browser-side package download can take 10-20 seconds on slower connections."
+      strong("Startup tip."),
+      " The GitHub Pages browser build may take 10-20 seconds on first load while webR packages download and cache."
     ),
     shinybusy::add_busy_spinner(
       spin = "double-bounce",
