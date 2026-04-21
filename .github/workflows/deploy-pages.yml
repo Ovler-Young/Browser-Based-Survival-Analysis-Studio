@@ -134,6 +134,10 @@ jobs:
             any::readxl
             any::writexl
             any::glue
+            any::cpp11
+            any::progress
+            any::RcppArmadillo
+            any::RcppEigen
 
       - name: Deploy to shinyapps.io
         if: steps.shinyapps_config.outputs.configured == 'true'

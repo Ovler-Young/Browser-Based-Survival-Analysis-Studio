@@ -75,6 +75,10 @@ account_name <- resolve_shinyapps_account_name(
   secret = Sys.getenv("SHINYAPPS_SECRET")
 )
 
+# Work around renv snapshot validation failures in CI by using rsconnect's
+# documented legacy dependency capture path for this deployment script.
+Sys.setenv(RSCONNECT_PACKRAT = "TRUE")
+
 rsconnect::setAccountInfo(
   name = account_name,
   token = Sys.getenv("SHINYAPPS_TOKEN"),
