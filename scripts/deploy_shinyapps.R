@@ -93,6 +93,7 @@ rsconnect::deployApp(
   appMode = "shiny",
   account = account_name,
   server = "shinyapps.io",
+  forceUpdate = TRUE,
   recordDir = tempdir(),
   launch.browser = FALSE,
   # Work around rsconnect 1.8.0 crashing in verbose mode with the httr2 backend.
