@@ -1,0 +1,2 @@
+# Redirect legacy shinylive preview paths back to the exported single-app root.
+/app_* / 302
